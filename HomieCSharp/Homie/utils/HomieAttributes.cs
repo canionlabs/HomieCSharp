@@ -2,36 +2,23 @@
 
 namespace Homie.utils
 {
+	public enum HomiePropertyType
+	{
+		FIELD,
+		STRUCT,
+		MAP
+	}
+
 	[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
 	public class HomieField : Attribute
 	{
 		public string tag;
+		public HomiePropertyType type;
 
-		public HomieField(string tag)
+		public HomieField(string tag, HomiePropertyType type)
 		{
-			this.tag = tag.Replace("$", "\\$");
-		}
-	}
-
-	[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Class | AttributeTargets.Struct)]
-	public class HomieStruct : Attribute
-	{
-		public string tag;
-
-		public HomieStruct(string tag = "\\w*")
-		{
-			this.tag = tag.Replace("$", "\\$");
-		}
-	}
-
-	[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Class | AttributeTargets.Struct)]
-	public class HomieMap : Attribute
-	{
-		public string tag;
-
-		public HomieMap(string tag = "\\w*")
-		{
-			this.tag = tag.Replace("$", "\\$");
+			this.tag = tag;
+			this.type = type;
 		}
 	}
 }
