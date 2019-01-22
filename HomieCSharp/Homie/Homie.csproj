@@ -10,5 +10,6 @@
   <ItemGroup>
     <Folder Include="datatypes\" />
     <Folder Include="utils\" />
+    <Folder Include="exchange\" />
   </ItemGroup>
 </Project>
