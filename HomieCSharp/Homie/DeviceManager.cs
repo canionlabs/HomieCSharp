@@ -10,32 +10,36 @@ namespace Homie
 {
 	public static class DeviceManager
 	{
-		public static IClientModel Client { get; set; }
-		public static Dictionary<string, Device> Devices { get; set; }
 		public static string BaseTopic { get; private set; }
+		public static Dictionary<string, Device> Devices { get; set; }
+		public static bool IsReady => !string.IsNullOrEmpty(BaseTopic) && Devices != null;
 
-		public static bool IsReady
+		public static void Setup(string baseTopic)
 		{
-			get
-			{
-				return Client != null && Devices != null;
-			}
-		}
-
-		public static void Setup(IClientModel client, string baseTopic)
-		{
-			Client = client;
-			Devices = new Dictionary<string, Device>();
 			BaseTopic = baseTopic;
+			Devices = new Dictionary<string, Device>();
 		}
 
-		public static Device CreateDevice(string ID)
+		public static Device CreateDevice(IClientModel client, string ID)
 		{
-			if (!IsReady) { throw new Exception("DeviceManager not ready"); }
+			if (!IsReady)
+			{
+				throw new Exception("DeviceManager is not ready, please call Setup() first.");
+			}
 
+			if (client != null || string.IsNullOrEmpty(ID))
+			{
+				throw new ArgumentException("Invalid arguments");
+			}
+
+			// Create a new Device
 			var device = new Device(ID);
+
+			// Register device to internal dictionary
 			Devices.Add(ID, device);
-			Client.Subscribe(string.Join("/", BaseTopic, ID, "#"), ProcessData);
+
+			// Use client to subscribe to this particular Device ID
+			client.Subscribe(string.Join("/", BaseTopic, ID, "#"), ProcessData);
 
 			return device;
 		}
@@ -112,7 +116,7 @@ namespace Homie
 
 								var propertyMap = property.GetValue(meta) as Dictionary<string, Property>;
 
-								foreach(var propertyName in data.Split(","))
+								foreach (var propertyName in data.Split(","))
 								{
 									var prop = new Property(propertyName);
 
