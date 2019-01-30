@@ -12,4 +12,14 @@
     <Folder Include="utils\" />
     <Folder Include="exchange\" />
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="lib\Newtonsoft.Json.pdb" />
+    <None Remove="lib\Newtonsoft.Json.xml" />
+    <None Remove="lib\Newtonsoft.Json.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>lib\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>

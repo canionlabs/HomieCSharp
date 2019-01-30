@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace Homie.exchange
 {
 	public interface IClientModel

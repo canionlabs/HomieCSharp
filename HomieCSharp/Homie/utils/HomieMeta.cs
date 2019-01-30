@@ -1,15 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
-using Homie.exchange;
+using Newtonsoft.Json;
 
 namespace Homie.utils
 {
 	public abstract class HomieMeta
 	{
+		[JsonIgnore]
 		public Dictionary<string, HomieMeta> metaLink;
+
+		[JsonIgnore]
 		public Dictionary<string, PropertyInfo> metaData;
+
+		[JsonIgnore]
 		public Dictionary<PropertyInfo, HomieField> fieldMetaData;
+
+		[JsonIgnore]
+		private static readonly JsonSerializerSettings jsonSettings;
+
+		static HomieMeta()
+		{
+			jsonSettings = new JsonSerializerSettings
+			{
+				Formatting = Formatting.None,
+				ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+				NullValueHandling = NullValueHandling.Ignore
+			};
+		}
 
 		protected HomieMeta()
 		{
@@ -34,10 +51,13 @@ namespace Homie.utils
 
 					metaData.Add(tag, property);
 					fieldMetaData.Add(property, homieField);
-
-					Console.WriteLine("Creating property: {0}", tag);
 				}
 			}
+		}
+
+		public string ToJson()
+		{
+			return JsonConvert.SerializeObject(this, jsonSettings);
 		}
 	}
 }
